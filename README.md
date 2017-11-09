@@ -21,9 +21,9 @@
 - Bare metal.
 - Docker container
 - VM 
-=======
-![Alt](http://www.scientificcomputing.com/sites/scientificcomputing.com/files/openpower_foundation_ml.jpg#right)
 
+![Alt](http://www.scientificcomputing.com/sites/scientificcomputing.com/files/openpower_foundation_ml.jpg#right)
+====================================
 OpenPOWER Solution Development Kit
 ====================================
 ## Solution Builder - A Service Oriented Orchestrator
@@ -181,22 +181,22 @@ c)  Install ubuntu 16.04 on all cluster nodes, and setup private network.
 — Add the cluster NODES and installer node’s private ip address to each server in  /etc/hosts
 
 Example of Entries in /etc/hosts
-
+```
 10.10.2.10 wlkmaster
 10.10.2.11 wlk1
 10.10.2.12 wlk2
 10.10.2.13 wlk3
  10.10.2.9 clustermgmt
-
+```
 IMPORTANT:  all nodes must be in the same subnet and private network as in the /etc/hosts entries above
 
-Set Hostname
+**Set Hostname**
 
 —Login to each cluster nodes and set the hostname appropriately
 example to set the masternode hostname to wlkmaster: 
-
+```
 $ sudo set hostname wlkmaster      
-
+```
 d) Install sshpass
 
 1.1 Identify Hard Disks to format  
@@ -208,6 +208,7 @@ You may need the help of your system administrator to select the disk you want t
 a) Please run this task on the masternode and each of the datanodes.
 
 As in this example
+```
 $ sudo  lsblk
 NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
 sda      8:0    1 931.5G  0 disk 
@@ -230,19 +231,23 @@ sr0     11:0    1  1024M  0 rom  
 sr1     11:1    1  1024M  0 rom  
 sr2     11:2    1  1024M  0 rom  
 sr3     11:3    1  1024M  0 rom  
- 
+```
+
 In the example above: sda is being used for the OS, so it cannot be used. For example all the 5.5T disks [ sdc .... sdm] are good candidates in this case. It is suggested to use disks of the same size.
 
 b) build the disk_list file using the format below
 
+```
 sd[your_firs_disk_id]
 sd[your_second_disk_id]
 sd[Your_third_disk_id]
-….
+```
 
 c) cp the disk_file to each subdirectory under solution_builder
 Example:
+```
 $ cp disk_file to ./solution_builder/common
+```
 
 d) Install sshpass
 
@@ -254,46 +259,48 @@ a) login to the installer or management node , create a user to manage the clust
 —Exit and log back in with the cluster management user.
 
 b) download the package
-
+```
 $ git clone https://github.com/OpenPOWER-BigData/solution-builder.git 
 $ cd solution-builder
-—use the solution_def template file to build your own custom input file  using the fields below:
+```
+**—use the solution_def template file to build your own custom input file  using the fields below:**
 
 #Service Name, required service, target node IP address, Username_to_RunService, namenode hostname, resourcemanager hostname, spark-master hostname
 
-— create a USER on each cluster node to run services
+**— create a USER on each cluster node to run services**
+```
 $ init_ssh_nodes.sh Your_Solution_Def_File
 
 $ ./deploy_solution.sh --sd <solution definition file name> --spark-version <spark version>
 
     where:
         <spark version> is one of ["1.6.2", "2.1"]
-
+```
 3. Test cluster functionality
 
 a)Testing Hadoop
-
+```
 $ ssh Cluster_username@wlkmaster "bash -s" < common/hadoopTest.sh 
-
+```
 b) Testing Spark
+```
 $ ssh Cluster_username@wlkmaster "bash -s" < common/hadoopTest.sh 
-
+```
 ——End of installation———
 
 4. Optional: To uninstall and Reinstall Apache BigTop
 
 a) login to the management or installer node with the cluster management user
-
+```
 $ cd ./solution-builder
 $ ./remove_solution.sh —sd  <solution definition file name>
 $ $ ./deploy_solution.sh --sd <solution definition file name> --spark-version <spark version>
+```
 
-
-
-=======
 - RHEL bug workaround - default requiretty field in /etc/sudoers is problematic 
 Red Hat has acknowledged the problem nad it will be removed in future releases https://bugzilla.redhat.com/show_bug.cgi?id=1020147
 Workaround: Remove below field from /etc/sudoers on all nodes
+
 ```
 Defaults requiretty
 ```
